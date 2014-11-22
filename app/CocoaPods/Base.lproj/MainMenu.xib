@@ -33,6 +33,12 @@
                                     <action selector="installBinstubIfNecessary:" target="-1" id="1aC-DY-EQL"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Check for Updates..." id="1BP-r2-dXN">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="checkForUpdates:" target="Voe-Tx-rLC" id="VHb-qD-9fi"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">

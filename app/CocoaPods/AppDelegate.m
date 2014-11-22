@@ -2,6 +2,7 @@
 
 #import <libgen.h>
 #import <SecurityFoundation/SFAuthorization.h>
+#import <Sparkle/Sparkle.h>
 
 @interface AppDelegate ()
 @end
@@ -154,6 +155,10 @@
     return nil;
   }
   return openPanel.URLs[0];
+}
+
+- (IBAction)checkForUpdates:(id)sender {
+  [[SUUpdater sharedUpdater] checkForUpdates:sender];
 }
 
 - (IBAction)openGuides:(id)sender {
