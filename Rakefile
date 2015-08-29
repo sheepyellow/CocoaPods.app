@@ -1,3 +1,5 @@
+RELEASE_PLATFORM = '10.11'
+
 DEPLOYMENT_TARGET = '10.8'
 DEPLOYMENT_TARGET_SDK = "MacOSX#{DEPLOYMENT_TARGET}.sdk"
 
@@ -38,7 +40,8 @@ end
 ENV['PATH'] = "#{File.join(DEPENDENCIES_PREFIX, 'bin')}:/usr/bin:/bin"
 ENV['CC'] = '/usr/bin/clang'
 ENV['CXX'] = '/usr/bin/clang++'
-ENV['CFLAGS'] = "-I#{File.join(DEPENDENCIES_PREFIX, 'include')} -mmacosx-version-min=#{DEPLOYMENT_TARGET} -isysroot #{SDKROOT}"
+ENV['CFLAGS'] = "-mmacosx-version-min=#{DEPLOYMENT_TARGET} -isysroot #{SDKROOT}"
+ENV['CPPFLAGS'] = "-I#{File.join(DEPENDENCIES_PREFIX, 'include')}"
 ENV['LDFLAGS'] = "-L#{File.join(DEPENDENCIES_PREFIX, 'lib')}"
 
 # If we don't create this dir and set the env var, the ncurses configure
@@ -70,7 +73,7 @@ LIBYAML_URL = "http://pyyaml.org/download/libyaml/yaml-#{LIBYAML_VERSION}.tar.gz
 ZLIB_VERSION = '1.2.8'
 ZLIB_URL = "http://zlib.net/zlib-#{ZLIB_VERSION}.tar.gz"
 
-OPENSSL_VERSION = '1.0.2'
+OPENSSL_VERSION = '1.0.2d'
 OPENSSL_URL = "https://www.openssl.org/source/openssl-#{OPENSSL_VERSION}.tar.gz"
 
 NCURSES_VERSION = '5.9'
@@ -79,25 +82,32 @@ NCURSES_URL = "http://ftpmirror.gnu.org/ncurses/ncurses-#{NCURSES_VERSION}.tar.g
 READLINE_VERSION = '6.3'
 READLINE_URL = "http://ftpmirror.gnu.org/readline/readline-#{READLINE_VERSION}.tar.gz"
 
-LIBFFI_VERSION = '3.1'
-LIBFFI_URL = "ftp://sourceware.org/pub/libffi/libffi-#{LIBFFI_VERSION}.tar.gz"
-
-RUBY__VERSION = '2.2.0'
+RUBY__VERSION = '2.2.2'
 RUBY_URL = "http://cache.ruby-lang.org/pub/ruby/2.2/ruby-#{RUBY__VERSION}.tar.gz"
 
-RUBYGEMS_VERSION = '2.4.5'
+RUBYGEMS_VERSION = '2.4.8'
 RUBYGEMS_URL = "https://rubygems.org/downloads/rubygems-update-#{RUBYGEMS_VERSION}.gem"
 
-GIT_VERSION = '2.2.2'
+CURL_VERSION = '7.41.0'
+CURL_URL = "http://curl.haxx.se/download/curl-#{CURL_VERSION}.tar.gz"
+
+GIT_VERSION = '2.4.3'
 GIT_URL = "https://www.kernel.org/pub/software/scm/git/git-#{GIT_VERSION}.tar.gz"
 
-SCONS_URL = "http://prdownloads.sourceforge.net/scons/scons-local-2.3.4.tar.gz"
-SERF_URL = "http://serf.googlecode.com/svn/src_releases/serf-1.3.8.tar.bz2"
-SVN_URL = "http://apache.hippo.nl/subversion/subversion-1.8.11.tar.gz"
+SCONS_VERSION = '2.3.4'
+SCONS_URL = "http://prdownloads.sourceforge.net/scons/scons-local-#{SCONS_VERSION}.tar.gz"
 
-BZR_URL = "https://launchpad.net/bzr/2.6/2.6.0/+download/bzr-2.6.0.tar.gz"
+SERF_VERSION = '1.3.8'
+SERF_URL = "http://serf.googlecode.com/svn/src_releases/serf-#{SERF_VERSION}.tar.bz2"
 
-MERCURIAL_URL = "http://mercurial.selenic.com/release/mercurial-3.3.tar.gz"
+SVN_VERSION = '1.8.13'
+SVN_URL = "http://apache.hippo.nl/subversion/subversion-#{SVN_VERSION}.tar.gz"
+
+BZR_VERSION = '2.6.0'
+BZR_URL = "https://launchpad.net/bzr/2.6/2.6.0/+download/bzr-#{BZR_VERSION}.tar.gz"
+
+MERCURIAL_VERSION = '3.3.3'
+MERCURIAL_URL = "http://mercurial.selenic.com/release/mercurial-#{MERCURIAL_VERSION}.tar.gz"
 
 # ------------------------------------------------------------------------------
 # pkg-config
@@ -105,7 +115,7 @@ MERCURIAL_URL = "http://mercurial.selenic.com/release/mercurial-3.3.tar.gz"
 
 pkg_config_tarball = File.join(DOWNLOAD_DIR, File.basename(PKG_CONFIG_URL))
 file pkg_config_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{PKG_CONFIG_URL} -o #{pkg_config_tarball}"
+  sh "/usr/bin/curl -sSL #{PKG_CONFIG_URL} -o #{pkg_config_tarball}"
 end
 
 pkg_config_build_dir = File.join(WORKBENCH_DIR, File.basename(PKG_CONFIG_URL, '.tar.gz'))
@@ -131,7 +141,7 @@ end
 
 yaml_tarball = File.join(DOWNLOAD_DIR, File.basename(LIBYAML_URL))
 file yaml_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{LIBYAML_URL} -o #{yaml_tarball}"
+  sh "/usr/bin/curl -sSL #{LIBYAML_URL} -o #{yaml_tarball}"
 end
 
 yaml_build_dir = File.join(WORKBENCH_DIR, File.basename(LIBYAML_URL, '.tar.gz'))
@@ -156,7 +166,7 @@ end
 
 zlib_tarball = File.join(DOWNLOAD_DIR, File.basename(ZLIB_URL))
 file zlib_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{ZLIB_URL} -o #{zlib_tarball}"
+  sh "/usr/bin/curl -sSL #{ZLIB_URL} -o #{zlib_tarball}"
 end
 
 zlib_build_dir = File.join(WORKBENCH_DIR, File.basename(ZLIB_URL, '.tar.gz'))
@@ -181,7 +191,7 @@ end
 
 openssl_tarball = File.join(DOWNLOAD_DIR, File.basename(OPENSSL_URL))
 file openssl_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{OPENSSL_URL} -o #{openssl_tarball}"
+  sh "/usr/bin/curl -sSL #{OPENSSL_URL} -o #{openssl_tarball}"
 end
 
 openssl_build_dir = File.join(WORKBENCH_DIR, File.basename(OPENSSL_URL, '.tar.gz'))
@@ -219,7 +229,7 @@ end
 
 ncurses_tarball = File.join(DOWNLOAD_DIR, File.basename(NCURSES_URL))
 file ncurses_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{NCURSES_URL} -o #{ncurses_tarball}"
+  sh "/usr/bin/curl -sSL #{NCURSES_URL} -o #{ncurses_tarball}"
 end
 
 ncurses_build_dir = File.join(WORKBENCH_DIR, File.basename(NCURSES_URL, '.tar.gz'))
@@ -245,7 +255,7 @@ end
 
 readline_tarball = File.join(DOWNLOAD_DIR, File.basename(READLINE_URL))
 file readline_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{READLINE_URL} -o #{readline_tarball}"
+  sh "/usr/bin/curl -sSL #{READLINE_URL} -o #{readline_tarball}"
 end
 
 readline_build_dir = File.join(WORKBENCH_DIR, File.basename(READLINE_URL, '.tar.gz'))
@@ -265,38 +275,12 @@ file installed_readline => readline_static_lib do
 end
 
 # ------------------------------------------------------------------------------
-# libFFI
-# ------------------------------------------------------------------------------
-
-libffi_tarball = File.join(DOWNLOAD_DIR, File.basename(LIBFFI_URL))
-file libffi_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{LIBFFI_URL} -o #{libffi_tarball}"
-end
-
-libffi_build_dir = File.join(WORKBENCH_DIR, File.basename(LIBFFI_URL, '.tar.gz'))
-directory libffi_build_dir => [libffi_tarball, WORKBENCH_DIR] do
-  sh "tar -zxvf #{libffi_tarball} -C #{WORKBENCH_DIR}"
-end
-
-# TODO fix for other OS X versions
-libffi_static_lib = File.join(libffi_build_dir, 'x86_64-apple-darwin14.0.0/.libs/libffi.a')
-file libffi_static_lib => [installed_pkg_config, libffi_build_dir] do
-  sh "cd #{libffi_build_dir} && ./configure --disable-shared --enable-static --prefix '#{DEPENDENCIES_PREFIX}'"
-  sh "cd #{libffi_build_dir} && make -j #{MAKE_CONCURRENCY}"
-end
-
-installed_libffi = File.join(DEPENDENCIES_DESTROOT, 'lib/libffi.a')
-file installed_libffi => libffi_static_lib do
-  sh "cd #{libffi_build_dir} && make install"
-end
-
-# ------------------------------------------------------------------------------
 # Scons
 # ------------------------------------------------------------------------------
 
 scons_tarball = File.join(DOWNLOAD_DIR, File.basename(SCONS_URL))
 file scons_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{SCONS_URL} -o #{scons_tarball}"
+  sh "/usr/bin/curl -sSL #{SCONS_URL} -o #{scons_tarball}"
 end
 
 scons_build_dir = File.join(WORKBENCH_DIR, File.basename(SCONS_URL, '.tar.gz'))
@@ -313,7 +297,7 @@ scons_bin = File.expand_path(File.join(scons_build_dir, 'scons.py'))
 
 serf_tarball = File.join(DOWNLOAD_DIR, File.basename(SERF_URL))
 file serf_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{SERF_URL} -o #{serf_tarball}"
+  sh "/usr/bin/curl -sSL #{SERF_URL} -o #{serf_tarball}"
 end
 
 serf_build_dir = File.join(WORKBENCH_DIR, File.basename(SERF_URL, '.tar.bz2'))
@@ -348,7 +332,7 @@ end
 
 ruby_tarball = File.join(DOWNLOAD_DIR, File.basename(RUBY_URL))
 file ruby_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{RUBY_URL} -o #{ruby_tarball}"
+  sh "/usr/bin/curl -sSL #{RUBY_URL} -o #{ruby_tarball}"
 end
 
 ruby_build_dir = File.join(WORKBENCH_DIR, File.basename(RUBY_URL, '.tar.gz'))
@@ -357,7 +341,6 @@ directory ruby_build_dir => [ruby_tarball, WORKBENCH_DIR] do
 end
 
 ruby_static_lib = File.join(ruby_build_dir, 'libruby-static.a')
-#file ruby_static_lib => [installed_pkg_config, installed_ncurses, installed_yaml, installed_zlib, installed_readline, installed_openssl, installed_libffi, ruby_build_dir] do
 file ruby_static_lib => [installed_pkg_config, installed_yaml, installed_openssl, ruby_build_dir] do
   sh "cd #{ruby_build_dir} && ./configure --enable-load-relative --disable-shared --with-static-linked-ext --disable-install-doc --with-out-ext=,dbm,gdbm,sdbm,dl/win32,fiddle/win32,tk/tkutil,tk,win32ole,-test-/win32/dln,-test-/win32/fd_setsize,-test-/win32/dln/empty --prefix '#{BUNDLE_PREFIX}'"
   sh "cd #{ruby_build_dir} && make -j #{MAKE_CONCURRENCY}"
@@ -382,12 +365,14 @@ end
 # Gems
 # ------------------------------------------------------------------------------
 
+gem_home = File.join(BUNDLE_DESTROOT, 'lib/ruby/gems', RUBY__VERSION.sub(/\d+$/, '0'))
+
 rubygems_gem = File.join(DOWNLOAD_DIR, File.basename(RUBYGEMS_URL))
 file rubygems_gem => DOWNLOAD_DIR do
-  sh "curl -sSL #{RUBYGEMS_URL} -o #{rubygems_gem}"
+  sh "/usr/bin/curl -sSL #{RUBYGEMS_URL} -o #{rubygems_gem}"
 end
 
-rubygems_update_dir = File.join(BUNDLE_DESTROOT, 'lib/ruby/gems', RUBY__VERSION.sub(/\d+$/, '0'), 'gems', File.basename(RUBYGEMS_URL, '.gem'))
+rubygems_update_dir = File.join(gem_home, 'gems', File.basename(RUBYGEMS_URL, '.gem'))
 directory rubygems_update_dir => [installed_ruby, installed_env_script, rubygems_gem] do
   sh "'#{File.join(BUNDLE_PREFIX, 'bin/bundle-env')}' gem install #{rubygems_gem} --no-document --env-shebang"
   sh "'#{File.join(BUNDLE_PREFIX, 'bin/bundle-env')}' update_rubygems"
@@ -398,9 +383,87 @@ directory rubygems_update_dir => [installed_ruby, installed_env_script, rubygems
   sh "chmod +x #{bin}"
 end
 
+def install_gem(name, version = nil)
+  sh "'#{File.join(BUNDLE_PREFIX, 'bin', 'bundle-env')}' gem install #{name} #{"--version=#{version}" if version} --no-document --env-shebang"
+end
+
 installed_pod_bin = File.join(BUNDLE_DESTROOT, 'bin/pod')
 file installed_pod_bin => rubygems_update_dir do
-  sh "env PATH='#{File.join(BUNDLE_PREFIX, 'bin')}' gem install cocoapods --version=#{install_cocoapods_version} --no-document --env-shebang"
+  install_gem 'cocoapods', install_cocoapods_version
+end
+
+# ------------------------------------------------------------------------------
+# pod plugins install
+# ------------------------------------------------------------------------------
+
+plugin = 'cocoapods-plugins-install'
+$:.unshift "#{plugin}/lib"
+require "#{plugin}/gem_version"
+plugin_with_version = "#{plugin}-#{CocoapodsPluginsInstall::VERSION}"
+
+installed_cocoapods_plugins_install = File.join(gem_home, 'gems', plugin_with_version)
+directory installed_cocoapods_plugins_install => installed_pod_bin do
+  Dir.chdir(plugin) do
+    sh "gem build #{plugin}.gemspec"
+  end
+  install_gem "#{plugin}/#{plugin_with_version}.gem"
+end
+
+# ------------------------------------------------------------------------------
+# Third-party gems
+# ------------------------------------------------------------------------------
+
+# Note, this assumes its being build on the latest OS X version.
+installed_osx_gems = []
+Dir.glob('/System/Library/Frameworks/Ruby.framework/Versions/[0-9]*/usr/lib/ruby/gems/*/specifications/*.gemspec').each do |gemspec|
+  # We have to make some file that does not contain any version information, otherwise we'd first have to query rubygems
+  # for the available versions, which is going to take a long time.
+  installed_gem = File.join(gem_home, 'specifications', "#{File.basename(gemspec, '.gemspec').split('-')[0..-2].join('-')}.CocoaPods-app.installed")
+  installed_osx_gems << installed_gem
+  file installed_gem => rubygems_update_dir do
+    require 'rubygems/specification'
+    gem = Gem::Specification.load(gemspec)
+    # First install the exact same version that Apple included in OS X.
+    case gem.name
+    when 'libxml-ruby'
+      # libxml-ruby-2.6.0 has an extconf.rb that depends on old behavior where `RbConfig` was available as `Config`.
+      install_gem(File.join(PATCHES_DIR, "#{File.basename(gemspec, '.gemspec')}.gem"))
+    when 'sqlite3'
+      # sqlite3-1.3.7 depends on BigDecimal header from before BigDecimal was made into a gem. I doubt anybody really
+      # uses sqlite for CocoaPods dependencies anyways, so just skip this old version.
+    else
+      install_gem(gem.name, gem.version)
+    end
+    # Now install the latest version of the gem.
+    install_gem(gem.name)
+    # Create our nonsense file that's only used to track whether or not the gems were installed.
+    touch installed_gem
+  end
+end
+
+# ------------------------------------------------------------------------------
+# cURL
+# ------------------------------------------------------------------------------
+
+curl_tarball = File.join(DOWNLOAD_DIR, File.basename(CURL_URL))
+file curl_tarball => DOWNLOAD_DIR do
+  sh "/usr/bin/curl -sSL #{CURL_URL} -o #{curl_tarball}"
+end
+
+curl_build_dir = File.join(WORKBENCH_DIR, File.basename(CURL_URL, '.tar.gz'))
+directory curl_build_dir => [curl_tarball, WORKBENCH_DIR] do
+  sh "tar -zxvf #{curl_tarball} -C #{WORKBENCH_DIR}"
+end
+
+libcurl = File.join(curl_build_dir, 'lib/.libs/libcurl.a')
+file libcurl => [installed_pkg_config, installed_openssl, installed_zlib, curl_build_dir] do
+  sh "cd #{curl_build_dir} && ./configure --disable-shared --enable-static --prefix '#{DEPENDENCIES_PREFIX}'"
+  sh "cd #{curl_build_dir} && make -j #{MAKE_CONCURRENCY}"
+end
+
+installed_libcurl = File.join(DEPENDENCIES_DESTROOT, 'lib/libcurl.a')
+file installed_libcurl => libcurl do
+  sh "cd #{curl_build_dir} && make install"
 end
 
 # ------------------------------------------------------------------------------
@@ -409,7 +472,7 @@ end
 
 git_tarball = File.join(DOWNLOAD_DIR, File.basename(GIT_URL))
 file git_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{GIT_URL} -o #{git_tarball}"
+  sh "/usr/bin/curl -sSL #{GIT_URL} -o #{git_tarball}"
 end
 
 git_build_dir = File.join(WORKBENCH_DIR, File.basename(GIT_URL, '.tar.gz'))
@@ -418,9 +481,9 @@ directory git_build_dir => [git_tarball, WORKBENCH_DIR] do
 end
 
 git_bin = File.join(git_build_dir, 'git')
-file git_bin => [installed_pkg_config, git_build_dir] do
-  sh "cd #{git_build_dir} && ./configure --without-tcltk --prefix '#{BUNDLE_PREFIX}'"
-  sh "cd #{git_build_dir} && make -j #{MAKE_CONCURRENCY}"
+file git_bin => [installed_pkg_config, installed_libcurl, git_build_dir] do
+  sh "cd #{git_build_dir} && ./configure --without-tcltk --prefix '#{BUNDLE_PREFIX}' LDFLAGS='-L \"#{DEPENDENCIES_PREFIX}/lib\" -lssl -lcrypto -lz -lcurl -lldap' CPPFLAGS='-I\"#{DEPENDENCIES_PREFIX}/include\"'"
+  sh "cd #{git_build_dir} && make -j #{MAKE_CONCURRENCY} V=1"
 end
 
 installed_git = File.join(BUNDLE_DESTROOT, 'bin/git')
@@ -441,7 +504,7 @@ end
 
 svn_tarball = File.join(DOWNLOAD_DIR, File.basename(SVN_URL))
 file svn_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{SVN_URL} -o #{svn_tarball}"
+  sh "/usr/bin/curl -sSL #{SVN_URL} -o #{svn_tarball}"
 end
 
 svn_build_dir = File.join(WORKBENCH_DIR, File.basename(SVN_URL, '.tar.gz'))
@@ -450,7 +513,7 @@ directory svn_build_dir => [svn_tarball, WORKBENCH_DIR] do
 end
 
 svn_bin = File.join(svn_build_dir, 'subversion/svn/svn')
-file svn_bin => [installed_pkg_config, installed_serf, svn_build_dir] do
+file svn_bin => [installed_pkg_config, installed_serf, installed_libcurl, svn_build_dir] do
   sh "cd #{svn_build_dir} && ./configure --disable-shared --enable-all-static --with-serf --without-apxs --without-jikes --without-swig --prefix '#{BUNDLE_PREFIX}'"
   sh "cd #{svn_build_dir} && make -j #{MAKE_CONCURRENCY}"
 end
@@ -466,7 +529,7 @@ end
 
 mercurial_tarball = File.join(DOWNLOAD_DIR, File.basename(MERCURIAL_URL))
 file mercurial_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{MERCURIAL_URL} -o #{mercurial_tarball}"
+  sh "/usr/bin/curl -sSL #{MERCURIAL_URL} -o #{mercurial_tarball}"
 end
 
 mercurial_build_dir = File.join(WORKBENCH_DIR, File.basename(MERCURIAL_URL, '.tar.gz'))
@@ -475,7 +538,7 @@ directory mercurial_build_dir => [mercurial_tarball, WORKBENCH_DIR] do
 end
 
 installed_mercurial = File.join(BUNDLE_DESTROOT, 'bin/hg')
-file installed_mercurial => mercurial_build_dir do
+file installed_mercurial => [installed_libcurl, mercurial_build_dir] do
   sh "cd #{mercurial_build_dir} && make PREFIX='#{BUNDLE_PREFIX}' install-bin"
 end
 
@@ -485,7 +548,7 @@ end
 
 bzr_tarball = File.join(DOWNLOAD_DIR, File.basename(BZR_URL))
 file bzr_tarball => DOWNLOAD_DIR do
-  sh "curl -sSL #{BZR_URL} -o #{bzr_tarball}"
+  sh "/usr/bin/curl -sSL #{BZR_URL} -o #{bzr_tarball}"
 end
 
 bzr_build_dir = File.join(WORKBENCH_DIR, File.basename(BZR_URL, '.tar.gz'))
@@ -494,7 +557,7 @@ directory bzr_build_dir => [bzr_tarball, WORKBENCH_DIR] do
 end
 
 built_bzr_dir = File.join(bzr_build_dir, 'build')
-directory built_bzr_dir => [installed_pkg_config, bzr_build_dir] do
+directory built_bzr_dir => [installed_pkg_config, installed_libcurl, bzr_build_dir] do
   sh "cd #{bzr_build_dir} && python setup.py build"
 end
 
@@ -504,19 +567,31 @@ file installed_bzr => built_bzr_dir do
 end
 
 # ------------------------------------------------------------------------------
+# Root Certificates
+# ------------------------------------------------------------------------------
+
+installed_cacert = File.join(BUNDLE_DESTROOT, 'share/cacert.pem')
+file installed_cacert do
+  sh "security find-certificate -a -p /Library/Keychains/System.keychain > '#{installed_cacert}'"
+  sh "security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > '#{installed_cacert}'"
+end
+
+# ------------------------------------------------------------------------------
 # Bundle tasks
 # ------------------------------------------------------------------------------
 
 namespace :bundle do
   task :build_tools => [
-    installed_pod_bin,
     installed_ruby,
+    installed_pod_bin,
+    installed_cocoapods_plugins_install,
     installed_git,
     installed_svn,
     installed_bzr,
     installed_mercurial,
-    installed_env_script
-  ]
+    installed_env_script,
+    installed_cacert,
+  ].concat(installed_osx_gems)
 
   task :remove_unneeded_files => :build_tools do
     remove_if_existant = lambda do |*paths|
@@ -529,10 +604,11 @@ namespace :bundle do
     sh "du -hs #{BUNDLE_DESTROOT}"
     remove_if_existant.call *Dir.glob(File.join(BUNDLE_DESTROOT, 'bin/svn[a-z]*'))
     remove_if_existant.call *FileList[File.join(BUNDLE_DESTROOT, 'lib/**/*.{,l}a')].exclude(/libruby-static/)
+    remove_if_existant.call *Dir.glob(File.join(BUNDLE_DESTROOT, 'lib/ruby/gems/**/*.o'))
+    remove_if_existant.call *Dir.glob(File.join(BUNDLE_DESTROOT, 'lib/ruby/gems/*/cache'))
     remove_if_existant.call *Dir.glob(File.join(BUNDLE_DESTROOT, '**/man[0-9]'))
     remove_if_existant.call *Dir.glob(File.join(BUNDLE_DESTROOT, '**/.DS_Store'))
     remove_if_existant.call File.join(BUNDLE_DESTROOT, 'include/subversion-1')
-    remove_if_existant.call File.join(BUNDLE_DESTROOT, 'lib/ruby/gems/2.1.0/cache')
     remove_if_existant.call File.join(BUNDLE_DESTROOT, 'man')
     remove_if_existant.call File.join(BUNDLE_DESTROOT, 'share/gitweb')
     remove_if_existant.call File.join(BUNDLE_DESTROOT, 'share/man')
@@ -619,10 +695,9 @@ XCODEBUILD_COMMAND = "cd app && xcodebuild -workspace CocoaPods.xcworkspace -sch
 namespace :app do
   desc 'Updates the Info.plist of the application to reflect the CocoaPods version'
   task :update_version do
-    info_plist = File.expand_path('app/CocoaPods/Info.plist')
+    info_plist = File.expand_path('app/CocoaPods/Supporting Files/Info.plist')
     sh "/usr/libexec/PlistBuddy -c 'Set :CFBundleShortVersionString #{install_cocoapods_version}' '#{info_plist}'"
-    build = `/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' '#{info_plist}'`.strip.to_i
-    sh "/usr/libexec/PlistBuddy -c 'Set :CFBundleVersion #{build+1}' '#{info_plist}'"
+    sh "/usr/libexec/PlistBuddy -c 'Set :CFBundleVersion #{install_cocoapods_version}' '#{info_plist}'"
   end
 
   desc 'Build release version of application'
@@ -640,6 +715,10 @@ end
 # Release tasks
 # ------------------------------------------------------------------------------
 
+def github_access_token
+  File.read('.github_access_token').strip rescue nil
+end
+
 namespace :release do
   task :clean => ['bundle:clean:all', 'app:clean']
 
@@ -647,8 +726,10 @@ namespace :release do
   task :build => ['bundle:build', 'bundle:verify_linkage', 'bundle:test', 'app:build', PKG_DIR] do
     output = `#{XCODEBUILD_COMMAND} -showBuildSettings | grep -w BUILT_PRODUCTS_DIR`.strip
     build_dir = output.split('= ').last
-    tarball = File.expand_path(File.join(PKG_DIR, "CocoaPods.app-#{install_cocoapods_version}.tar.xz"))
-    sh "cd '#{build_dir}' && tar cfJ '#{tarball}' CocoaPods.app"
+    #tarball = File.expand_path(File.join(PKG_DIR, "CocoaPods.app-#{install_cocoapods_version}.tar.xz"))
+    #sh "cd '#{build_dir}' && tar cfJ '#{tarball}' CocoaPods.app"
+    tarball = File.expand_path(File.join(PKG_DIR, "CocoaPods.app-#{install_cocoapods_version}.tar.bz2"))
+    sh "cd '#{build_dir}' && tar cfj '#{tarball}' CocoaPods.app"
 
     puts
     puts "Finished building release in #{Time.now - $build_started_at} seconds"
@@ -657,14 +738,56 @@ namespace :release do
 
   desc "Create a clean build"
   task :cleanbuild => [:clean, :build]
+
+  desc "Upload release"
+  task :upload => [] do
+    tarball = File.expand_path(File.join(PKG_DIR, "CocoaPods.app-#{install_cocoapods_version}.tar.bz2"))
+    sha = `shasum -a 256 -b '#{tarball}'`.split(' ').first
+
+    require 'net/http'
+    require 'json'
+    require 'rest'
+
+    github_headers = {
+      'Content-Type' => 'application/json',
+      'User-Agent' => 'runscope/0.1,segiddins',
+      'Accept' => 'application/json',
+    }
+
+    response = REST.post("https://api.github.com/repos/CocoaPods/CocoaPods-app/releases?access_token=#{github_access_token}",
+                         {tag_name: install_cocoapods_version, name: install_cocoapods_version}.to_json,
+                         github_headers)
+
+    tarball_name = File.basename(tarball)
+
+    upload_url = JSON.load(response.body)['upload_url'].gsub('{?name}', "?name=#{tarball_name}&Content-Type=application/x-tar&access_token=#{github_access_token}")
+    response = REST.post(upload_url, File.read(tarball, :mode => 'rb'), github_headers)
+    tarball_download_url = JSON.load(response.body)['browser_download_url']
+
+    puts
+    puts "Make a PR to https://github.com/CocoaPods/CocoaPods-app/blob/master/homebrew-cask " \
+         "updating the version to #{install_cocoapods_version} and the sha to #{sha}"
+    puts
+  end
 end
 
 desc "Create a clean release build for distribution"
 task :release do
+  unless `sw_vers -productVersion`.strip.split('.').first(2).join('.') == RELEASE_PLATFORM
+    puts "[!] A release build must be performed on the latest OS X version to ensure all the gems that Apple includes " \
+         "in its OS will be bundled."
+    exit 1
+  end
   unless File.basename(SDKROOT) == DEPLOYMENT_TARGET_SDK
-    puts "[!] Unable to find the SDK for the deployment target `#{DEPLOYMENT_TARGET}`, which is " \
-         "required to create a distribution release."
+    puts "[!] Unable to find the SDK for the deployment target `#{DEPLOYMENT_TARGET}`, which is required to create a " \
+         "distribution release."
+    exit 1
+  end
+  unless github_access_token
+    puts "[!] You have not provided a github access token via `.github_access_token`, " \
+         'so a GitHub release cannot be made.'
     exit 1
   end
   Rake::Task['release:cleanbuild'].invoke
+  Rake::Task['release:upload'].invoke
 end
